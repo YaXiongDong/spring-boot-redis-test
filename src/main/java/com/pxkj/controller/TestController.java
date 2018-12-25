@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.pxkj.entity.User;
 import com.pxkj.service.UserService;
 
@@ -20,6 +21,12 @@ public class TestController {
 	public String test(User user) {
 		redisTemplate.opsForValue().set("user", user);
 		return "success";
+	}
+
+	@GetMapping("/getUser")
+	public Object getUser() {
+		String str = JSON.toJSONString(redisTemplate.opsForValue().get("user"));
+		return JSON.parseObject(str, User.class);
 	}
 
 	@GetMapping("/get")
