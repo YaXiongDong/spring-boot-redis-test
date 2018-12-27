@@ -17,8 +17,10 @@ import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -52,6 +54,11 @@ public class RedisConfig extends CachingConfigurerSupport {
 	@Value("${spring.redis.database}")
 	private int database;
 
+	/**
+	 * 使用jedis连接池的配置
+	 * 
+	 * @return
+	 */
 	@Bean(name = "redisConnectionFactory")
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration standaloneConfig = new RedisStandaloneConfiguration();
@@ -64,6 +71,12 @@ public class RedisConfig extends CachingConfigurerSupport {
 		return factory;
 	}
 
+	/**
+	 * 使用Redis缓存的序列化配置，使用Jackson序列化
+	 * 
+	 * @param redisConnectionFactory
+	 * @return
+	 */
 	@Bean(name = "cacheManager")
 	public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
 		RedisCacheWriter writer = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
@@ -74,6 +87,22 @@ public class RedisConfig extends CachingConfigurerSupport {
 		return new RedisCacheManager(writer, configuration);
 	}
 
+	/**
+	 * 使用spring session Redis 时的序列化配置，使用Jackson
+	 * 
+	 * @return
+	 */
+	@Bean(name = "springSessionDefaultRedisSerializer")
+	public RedisSerializer<Object> defaultRedisSerializer() {
+		return new GenericJackson2JsonRedisSerializer();
+	}
+
+	/**
+	 * RedisTemplate配置，使用Jackson序列化方式
+	 * 
+	 * @param redisConnectionFactory
+	 * @return
+	 */
 	@Bean(name = "redisTemplate")
 	public <T> RedisTemplate<String, T> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, T> redisTemplate = new RedisTemplate<String, T>();
