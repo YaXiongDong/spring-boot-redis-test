@@ -9,7 +9,7 @@ import com.pxkj.entity.User;
 public class UserService {
 
 	@Cacheable(cacheNames = "user", key = "#id.toString()")
-	public User getUser(Integer id) {
+	public Object getUser(Integer id) {
 		System.out.println("从数据库查询user");
 		User user = new User();
 		user.setId(id);

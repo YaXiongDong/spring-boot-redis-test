@@ -57,7 +57,7 @@ public class TestController {
 	 */
 	@GetMapping("/get")
 	public Object get() {
-		User user = userService.getUser(2);
+		Object user = userService.getUser(2);
 		return user;
 	}
 

@@ -55,6 +55,12 @@ public class RedisConfig extends CachingConfigurerSupport {
 	private int database;
 
 	/**
+	 * Redis集群节点地址
+	 */
+//	@Value("${spring.redis.cluster.nodes}")
+//	private String clusterNodes;
+
+	/**
 	 * 使用jedis连接池的配置
 	 * 
 	 * @return
@@ -70,6 +76,25 @@ public class RedisConfig extends CachingConfigurerSupport {
 		JedisConnectionFactory factory = new JedisConnectionFactory(standaloneConfig, clientConfig);
 		return factory;
 	}
+
+	/**
+	 * 使用Redis集群RedisConnectionFactory配置
+	 */
+//	@Bean(name = "redisConnectionFactory")
+//	public RedisConnectionFactory redisConnectionFactory() {
+//		RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration();
+//		String[] nodes = clusterNodes.split(",");
+//		Set<RedisNode> set = new HashSet<>();
+//		for (String node : nodes) {
+//			String[] s = node.split(":");
+//			RedisNode redisNode = new RedisNode(s[0], Integer.parseInt(s[1]));
+//			set.add(redisNode);
+//		}
+//		clusterConfiguration.setClusterNodes(set);
+//		JedisClientConfiguration clientConfig = JedisClientConfiguration.defaultConfiguration();
+//		JedisConnectionFactory factory = new JedisConnectionFactory(clusterConfiguration, clientConfig);
+//		return factory;
+//	}
 
 	/**
 	 * 使用Redis缓存的序列化配置，使用Jackson序列化
